@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundiary - 내 일기장</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Soundiary</h1>
+        <nav>
+            <span>OOO님, 환영합니다!</span>
+            <button id="logout-btn" class="btn-secondary">로그아웃</button>
+        </nav>
+    </header>
+
+    <main class="diary-container">
+        <h2>오늘의 일기</h2>
+        <form id="diary-form">
+            <textarea id="diary-content" placeholder="오늘 어떤 하루를 보내셨나요?"></textarea>
+            <button type="submit" class="btn">일기 저장 & 음악 추천받기</button>
+        </form>
+        
+        <div id="result-area">
+            </div>
+    </main>
+    
+    <script src="js/index.js"></script>
+</body>
+</html>
