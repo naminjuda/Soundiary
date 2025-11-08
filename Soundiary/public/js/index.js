@@ -23,12 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
             alert("회원가입 성공! 로그인 페이지로 이동합니다.");
             
-            // 회원가입 성공 시 로그인 페이지로 이동
-            window.location.href = "login.html"; 
+            // 회원가입 성공 시 로그인 페이지(루트)로 이동
+            // "login.html" -> "/" 로 수정
+            window.location.href = "/"; 
         });
     }
 
-    // --- 로그인 페이지 로직 (login.html) ---
+    // --- 로그인 페이지 로직 (login.html 또는 index.html) ---
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", (e) => {
@@ -42,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("로그인 성공! 일기장으로 이동합니다.");
 
             // 로그인 성공 시 메인 다이어리 페이지로 이동
-            window.location.href = "diary.html";
+            // "diary.html" -> "/diary.html" 로 수정
+            window.location.href = "/diary.html";
         });
     }
 
@@ -94,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(logoutBtn) {
         logoutBtn.addEventListener("click", () => {
            alert("로그아웃 되었습니다.");
-           window.location.href = "login.html";
+           window.location.href = "/";
         });
     }
 });

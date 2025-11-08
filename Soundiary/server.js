@@ -10,6 +10,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, 'public')));
+//for static file (ex. public)
+
 app.listen(8080, function() { // 8080 port for test
     console.log('listening on 8080');
 });
