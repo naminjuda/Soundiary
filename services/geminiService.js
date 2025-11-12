@@ -17,7 +17,7 @@ export async function getEmotionKeywords(diaryText) {
     `;
 
     try {
-        const response = await ai.models.generateContent({
+        const result = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: [
                 { role: 'user', parts: [{ text: prompt }] }
@@ -28,7 +28,14 @@ export async function getEmotionKeywords(diaryText) {
             },
         });
 
-        const keywords = response.text.trim();
+        const response = result.response;
+        const text = response.text();
+        if (!text || text !== 'string') {
+            console.error('Invalid text response from Gemini API:', response);
+            throw new Error('Invalid response from Gemini API.');
+        }
+
+        const keywords = text.trim();
         return keywords;
     } catch (error) {
         console.error('Error fetching emotion keywords:', error);
