@@ -9,12 +9,13 @@ router.get('/track/:id', async (req, res) => {
     try {
         const token = await getSpotifyToken();
         const trackId = req.params.id;
+        // Spotify API 호출
         const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        res.json(response.data);
+        res.json(response.data); // json 형식으로 응답 반환
     } catch (error) {
         console.error('Error fetching track from Spotify:', error);
         res.status(500).json({ error: 'Failed to fetch track from Spotify' });
