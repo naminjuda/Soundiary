@@ -28,9 +28,10 @@ export async function getEmotionKeywords(diaryText) {
             },
         });
 
-        const response = result.response;
-        const text = response.text();
-        if (!text || text !== 'string') {
+        const response = result.text;
+        console.log('Gemini API response:', response);
+        const text = response;
+        if (!text || typeof text !== 'string') {
             console.error('Invalid text response from Gemini API:', response);
             throw new Error('Invalid response from Gemini API.');
         }
