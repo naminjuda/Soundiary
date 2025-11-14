@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import authRouter from './routes/auth.routes.js';
+import spotifyRouter from './routes/spotify.routes.js'; // spotify router 추가
+import geminiRouter from './routes/gemini.routes.js'; // gemini router 추가
 import { notFound, errorHandler } from './middlewares/error.js';
 
 const app = express();
@@ -15,6 +17,8 @@ app.use(morgan('dev'));
 
 // 라우팅
 app.use('/auth', authRouter);
+app.use('/spotify', spotifyRouter); // spotify 라우트 사용
+app.use('/gemini', geminiRouter); // gemini 라우트 사용, url은 추후 변경할 수도? (예: /gemini -> /emotion)
 
 // 404 & 에러 핸들러 (항상 마지막)
 app.use(notFound);
