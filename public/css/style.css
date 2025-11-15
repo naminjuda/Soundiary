@@ -72,6 +72,46 @@ body {
     background-color: #2980b9;
 }
 
+/* [추가된 부분] 카카오 로그인 버튼 스타일 */
+.btn.kakao {
+    background-color: #FEE500;
+    color: #191919;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* 아이콘과 텍스트 간격 */
+}
+
+.btn.kakao:hover {
+    background-color: #fdd835; /* 호버 시 살짝 어둡게 (선택 사항) */
+}
+
+.btn.kakao img {
+    width: 18px;
+    height: 18px;
+}
+
+/* [추가된 부분] 소셜 로그인 구분선 스타일 */
+.social-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #888;
+    margin: 15px 0;
+}
+
+.social-divider::before,
+.social-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+}
+
+.social-divider:not(:empty)::before { margin-right: .25em; }
+.social-divider:not(:empty)::after { margin-left: .25em; }
+/* [ /추가된 부분] */
+
 .btn-secondary {
     background-color: #95a5a6;
 }
