@@ -14,29 +14,26 @@ export async function getEmotionKeywords(diaryText) {
 
     Diary Entry:
     "${diaryText}"
-    `;
+
+    IMPORTANT: If the text is unreadable or meaningless, JUST return "unknown".
+    `; // 프롬프트 작성, 감정 키워드 추출 요청, 의미 없는 경우 "unknown" 반환 지시
 
     try {
-        const result = await ai.models.generateContent({
+        const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: [
                 { role: 'user', parts: [{ text: prompt }] }
             ],
-            config: {
-                systemInstruction: 'You are an expert in emotional analysis.',
-                maxOutputTokens: 100,
-            },
         });
 
-        const response = result.text;
-        console.log('Gemini API response:', response);
-        const text = response;
+        const text = response.text;
+        console.log('Gemini API response:', text);
         if (!text || typeof text !== 'string') {
-            console.error('Invalid text response from Gemini API:', response);
+            console.error('Invalid text response from Gemini API:', text);
             throw new Error('Invalid response from Gemini API.');
         }
 
-        const keywords = text.trim();
+        const keywords = text.trim().split(',').map((keyword) => keyword.trim());
         return keywords;
     } catch (error) {
         console.error('Error fetching emotion keywords:', error);
