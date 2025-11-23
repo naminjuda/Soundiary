@@ -16,23 +16,30 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. 일기 및 추천 결과 테이블 (Diaries) 생성
+-- 4. 일기 테이블 (Diaries) 생성
 -- 사용자가 삭제되면 작성한 일기도 같이 삭제되도록 설정 (ON DELETE CASCADE)
 CREATE TABLE IF NOT EXISTS diaries (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,                    -- users 테이블의 id 참조
     content TEXT NOT NULL,                   -- 일기 원문
     emotion_keyword VARCHAR(50),             -- Gemini가 분석한 감정 (예: 행복, 우울)
-    
-    -- Spotify 추천 결과 저장 컬럼
-    spotify_id VARCHAR(100),                 -- trackId
-    track_title VARCHAR(255),                -- 노래 제목
-    track_artist VARCHAR(255),               -- 가수 이름
-    track_url TEXT,                          -- 스포티파이 재생 링크
-    album_cover TEXT,                        -- 앨범 커버 이미지 URL (프론트 표시용)
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 작성 시간
     
     -- 외래키 설정: user_id는 users 테이블의 id와 연결됨
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 5. 추천 결과 테이블 (Recommended_Tracks) 생성
+CREATE TABLE IF NOT EXISTS recommended_tracks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    diary_id INT NOT NULL,
+
+    -- Spotify 추천 결과 저장 컬럼
+    spotify_id VARCHAR(100) NOT NULL,                 -- trackId
+    track_title VARCHAR(255) NOT NULL,                -- 노래 제목
+    track_artist VARCHAR(255) NOT NULL,               -- 가수 이름
+    track_url TEXT,                                   -- 스포티파이 재생 링크
+    album_cover TEXT,                                 -- 앨범 커버 이미지 URL (프론트 표시용)
+
+    FOREIGN KEY (diary_id) REFERENCES diaries(id) ON DELETE CASCADE
 );

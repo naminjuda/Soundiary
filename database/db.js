@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import dbConfig from '../config/db.config.js';
 
-const pool = mysql.createPool({
+export const pool = mysql.createPool({
     host: dbConfig.host,
     user: dbConfig.user,
     password: dbConfig.password,
