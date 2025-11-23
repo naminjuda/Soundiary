@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("회원가입 성공! 로그인 페이지로 이동합니다.");
             
             // 회원가입 성공 시 로그인 페이지로 이동
-            window.location.href = "index.html"; 
+            window.location.href = "../index.html"; 
         });
     }
 
