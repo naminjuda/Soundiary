@@ -26,7 +26,7 @@ const getTracksFromPlaylist = async (playlist_id, token) => {
         headers: { Authorization: `Bearer ${token}` },
         params: {
             limit: 10,
-            fields: 'items(track(id, name, artists(name), album(name, images)))' // 필요한 필드만 선택
+            fields: 'items(track(id, name, artists(name), external_urls, album(images)))' // 필요한 필드만 선택
         }
     });
     return response.data.items.map(item => item.track).filter(track => track != null);
