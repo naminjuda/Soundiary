@@ -78,7 +78,8 @@ export async function update(kakao_id, patch) {
     if (updates.length === 0) return null;
 
     const query = `UPDATE users SET ${updates.join(', ')} WHERE kakao_id = ?`;
-
+    values.push(kakao_id);
+    
     await pool.query(query, values);
 
     return await findByKakaoId(kakao_id);

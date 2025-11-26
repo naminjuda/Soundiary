@@ -11,6 +11,7 @@ import authRouter from './routes/auth.routes.js';
 import spotifyRouter from './routes/spotify.routes.js'; // spotify router 추가
 import geminiRouter from './routes/gemini.routes.js'; // gemini router 추가
 import recommendationRouter from './routes/recommendation.routes.js'; // recommendation router 추가
+import diaryRouter from './routes/diary.routes.js'; // diary router 추가
 import { notFound, errorHandler } from './middlewares/error.js';
 
 // [추가] __filename, __dirname 설정 (ESM 기준)
@@ -31,6 +32,7 @@ app.use('/auth', authRouter);
 app.use('/spotify', spotifyRouter); // spotify 라우트 사용
 app.use('/gemini', geminiRouter); // gemini 라우트 사용
 app.use('/recommendation', recommendationRouter); // recommendation 라우트 사용
+app.use('/diary', diaryRouter); // diary 라우트 사용
 
 // 404 & 에러 핸들러 (항상 마지막)
 app.use(notFound);

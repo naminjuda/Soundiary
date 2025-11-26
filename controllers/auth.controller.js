@@ -21,8 +21,7 @@ export async function kakaoLoginStart(_req, res, next) {
 
 export async function kakaoCallback(req, res, next) {
   try {
-    // const { code } = req.query;
-    const { code } = req.body;
+    const { code } = req.query;
     if (!code) return res.status(400).json({ error: 'missing_code' });
 
     const { jwt, isNewUser, user } = await authSvc.handleKakaoCallback(code);
