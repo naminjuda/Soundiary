@@ -79,6 +79,8 @@ export async function update(kakao_id, patch) {
 
     const query = `UPDATE users SET ${updates.join(', ')} WHERE kakao_id = ?`;
 
+    values.push(kakao_id); // WHERE 절의 물음표(?)에 넣을 ID 추가
+
     await pool.query(query, values);
 
     return await findByKakaoId(kakao_id);
