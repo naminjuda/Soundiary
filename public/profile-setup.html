@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundiary - 프로필 설정</title>
+    <link rel="stylesheet" href="css/style.css"> <style>
+        /* 프로필 이미지만을 위한 추가 스타일 (기존 CSS에 없어서 여기에 추가) */
+        .profile-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f4f7f6; /* 배경색과 매치 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>프로필 설정</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Soundiary에서 사용할<br>멋진 닉네임을 지어주세요.
+        </p>
+
+        <div class="profile-wrapper">
+            <img id="profileImage" src="https://via.placeholder.com/150" alt="프로필 이미지" class="profile-img">
+        </div>
+
+        <div class="input-group">
+            <label for="nicknameInput">닉네임</label>
+            <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" maxlength="10">
+        </div>
+
+        <button id="save-profile-btn" class="btn">Soundiary 시작하기</button>
+    </div>
+
+    <script src="js/index.js"></script> </body>
+</html>
