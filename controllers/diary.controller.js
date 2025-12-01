@@ -1,12 +1,16 @@
+// diary.controller.js
 import * as diaryService from '../services/diaryService.js';
 
 // 일기 작성, 결과 반환
 export const createDiary = async (req, res) => {
     try {
-        // const userId = req.user.id;
-        // TODO: userId를 req에서 받아와주세요
-        const { content } = req.body;
+        const userId = req.user?.id; 
 
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const { content } = req.body;
         if (!content) return res.status(400).json({ message: 'No content' });
 
         const result = await diaryService.createDiarywithTracks(userId, content);
@@ -26,8 +30,11 @@ export const createDiary = async (req, res) => {
 // 일기 목록 조회
 export const getMyDiaries = async (req, res) => {
     try {
-        // const userId = req.user.id;
-        // TODO: userId를 req에서 받아와주세요
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
         const diaries = await diaryService.getMyDiaries(userId);
         res.status(200).json(diaries);
     } catch (error) {
@@ -41,11 +48,14 @@ export const getMyDiaries = async (req, res) => {
 // 일기 상세 조회 (본문 + 트랙 리스트)
 export const getMyDiary = async (req, res) => {
     try {
-        // const userId = req.user.id;
-        // TODO: userId를 req에서 받아와주세요
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
         const { id } = req.params;
 
-        const diary = await diaryService.getMyDiary(id, userId); // diary_id, user_id
+        const diary = await diaryService.getMyDiary(id, userId); 
         res.status(200).json(diary);
     } catch (error) {
         if (error.message === 'DIARY_NOT_FOUND') {
@@ -64,8 +74,11 @@ export const getMyDiary = async (req, res) => {
 // 일기 삭제
 export const deleteMyDiary = async (req, res) => {
     try {
-        // const userId = req.user.id;
-        // TODO: userId를 req에서 받아와주세요
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
         const { id } = req.params;
 
         await diaryService.removeDiary(id, userId);
