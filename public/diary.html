@@ -9,9 +9,16 @@
 <body>
     <header>
         <h1>Soundiary 🎵</h1>
-        <nav>
+        <nav style="display: flex; align-items: center; gap: 10px;">
             <span><span id="nickname-display" style="font-weight: bold;">OOO</span>님, 환영합니다!</span>
-            <button id="logout-btn" class="btn-secondary" style="margin-left: 10px; padding: 5px 10px; font-size: 0.8rem;">로그아웃</button>
+            
+            <button onclick="location.href='mypage.html'" class="btn-header btn-purple">
+                📂 내 프로필 & 일기장
+            </button>
+
+            <button id="logout-btn" class="btn-header btn-grey">
+                로그아웃
+            </button>
         </nav>
     </header>
 

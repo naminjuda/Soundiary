@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - Soundiary</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <button onclick="history.back()" class="btn-header btn-grey">
+        ⬅ 뒤로가기
+        </button>
+    
+        <h1>My Profile</h1>
+    
+        <div style="width: 100px;"></div> 
+    </header>
+
+    <div class="form-container" style="max-width: 600px; margin-top: 30px;">
+        <div class="profile-header" style="text-align: center; margin-bottom: 40px;">
+            <img id="my-profile-img" src="https://via.placeholder.com/150" class="profile-img" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #f4f7f6; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <h2 id="my-nickname" style="margin-top: 15px; color: #2c3e50;">닉네임</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-top: 5px;">나의 감정 기록 보관소 📚</p>
+        </div>
+
+        <div id="diary-list-section">
+            <h3 style="border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; color: #34495e;">
+                📜 지난 일기들
+            </h3>
+            <div id="diary-list-wrapper">
+                <p style="text-align: center; color: #aaa; padding: 20px;">로딩 중...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/index.js"></script>
+</body>
+</html>

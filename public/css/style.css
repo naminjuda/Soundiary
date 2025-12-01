@@ -1,173 +1,124 @@
 /* 기본 스타일 초기화 및 설정 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f4f7f6; color: #333; line-height: 1.6;
 }
 
-/* 폼 컨테이너 (로그인, 회원가입) */
+/* 폼 컨테이너 */
 .form-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 400px; margin: 50px auto; padding: 30px;
+    background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-
-.form-container h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-.form-container h2 {
-    text-align: center;
-    color: #34495e;
-    margin-bottom: 30px;
-}
+.form-container h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
+.form-container h2 { text-align: center; color: #34495e; margin-bottom: 30px; }
 
 /* 폼 입력 그룹 */
-.input-group {
-    margin-bottom: 20px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+.input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
 
 /* 버튼 스타일 */
 .btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
+    width: 100%; padding: 12px; background-color: #3498db; color: white;
+    border: none; border-radius: 4px; font-size: 1rem; font-weight: 700; cursor: pointer;
     transition: background-color 0.3s ease;
 }
+.btn:hover { background-color: #2980b9; }
 
-.btn:hover {
-    background-color: #2980b9;
-}
-
-/* [추가된 부분] 카카오 로그인 버튼 스타일 */
+/* 카카오 로그인 버튼 */
 .btn.kakao {
-    background-color: #FEE500;
-    color: #191919;
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* 아이콘과 텍스트 간격 */
+    background-color: #FEE500; color: #191919; margin-top: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
 }
+.btn.kakao:hover { background-color: #fdd835; }
+.btn.kakao img { width: 18px; height: 18px; }
 
-.btn.kakao:hover {
-    background-color: #fdd835; /* 호버 시 살짝 어둡게 (선택 사항) */
-}
-
-.btn.kakao img {
-    width: 18px;
-    height: 18px;
-}
-
-/* [추가된 부분] 소셜 로그인 구분선 스타일 */
-.social-divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #888;
-    margin: 15px 0;
-}
-
-.social-divider::before,
-.social-divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #eee;
-}
-
+/* 소셜 로그인 구분선 */
+.social-divider { display: flex; align-items: center; text-align: center; color: #888; margin: 15px 0; }
+.social-divider::before, .social-divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
 .social-divider:not(:empty)::before { margin-right: .25em; }
 .social-divider:not(:empty)::after { margin-left: .25em; }
-/* [ /추가된 부분] */
 
-.btn-secondary {
-    background-color: #95a5a6;
-}
-.btn-secondary:hover {
-    background-color: #7f8c8d;
-}
+.btn-secondary { background-color: #95a5a6; }
+.btn-secondary:hover { background-color: #7f8c8d; }
 
-
-/* 하단 링크 (로그인/회원가입) */
-.auth-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.auth-link a {
-    color: #3498db;
-    text-decoration: none;
-}
+/* 하단 링크 */
+.auth-link { text-align: center; margin-top: 20px; }
+.auth-link a { color: #3498db; text-decoration: none; }
 
 /* --- 다이어리 페이지 스타일 --- */
-
 header {
-    background-color: #ffffff;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
-header h1 {
-    color: #2c3e50;
-}
-
-header nav span {
-    margin-right: 15px;
-}
+header h1 { color: #2c3e50; }
+header nav span { margin-right: 15px; }
 
 .diary-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 800px; margin: 40px auto; padding: 30px;
+    background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+#diary-content {
+    width: 100%; min-height: 250px; padding: 15px; border: 1px solid #ddd;
+    border-radius: 4px; font-size: 1rem; font-family: inherit; line-height: 1.7;
+    margin-bottom: 20px; resize: vertical;
 }
 
-#diary-content {
-    width: 100%;
-    min-height: 250px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-    line-height: 1.7;
-    margin-bottom: 20px;
-    resize: vertical; /* 세로 크기만 조절 가능 */
+/* ▼▼▼ [추가됨] 마이페이지 & 일기 카드 스타일 ▼▼▼ */
+.diary-card {
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s;
+}
+.diary-card:hover { transform: translateY(-2px); }
+
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.card-date { font-weight: bold; color: #6c5ce7; font-size: 0.95rem; }
+.card-emotion { background: #f0f3ff; color: #4a69bd; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+
+.card-content { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
+
+/* 음악 추천 박스 */
+.music-box { display: flex; align-items: center; background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+.music-icon { font-size: 24px; margin-right: 12px; }
+.music-info { display: flex; flex-direction: column; }
+.music-title { font-weight: bold; color: #333; font-size: 0.9rem; }
+.music-artist { color: #888; font-size: 0.8rem; }
+
+/* ========================================= */
+/* [수정] 버튼 스타일 통일 (맨 아래에 붙여넣으세요) */
+/* ========================================= */
+
+/* 모든 헤더 버튼의 공통 모양 정의 */
+.btn-header {
+    padding: 8px 16px;       /* 높이와 너비 통일 */
+    font-size: 0.9rem;       /* 글자 크기 통일 */
+    border-radius: 6px;      /* 둥근 모서리 통일 */
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    display: inline-flex;    /* 내부 텍스트/아이콘 중앙 정렬 */
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 38px;            /* 높이 강제 고정 (중요!) */
+}
+
+/* 색상 1: 보라색 (강조 버튼 - 프로필, 저장 등) */
+.btn-purple {
+    background-color: #6c5ce7;
+}
+.btn-purple:hover {
+    background-color: #5b4cc4;
+    transform: translateY(-1px); /* 살짝 떠오르는 효과 */
+}
+
+/* 색상 2: 회색 (보조 버튼 - 로그아웃, 뒤로가기) */
+.btn-grey {
+    background-color: #95a5a6;
+}
+.btn-grey:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-1px);
 }
