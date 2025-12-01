@@ -15,3 +15,15 @@ export const createRecommendedTrack = async (trackDataList) => {
         throw error;
     }
 };
+
+// 일기 ID로 추천 트랙리스트 조회
+export const findTracksByDiaryId = async (diaryId) => {
+    const sql = `
+        SELECT track_title, track_artist, album_cover
+        FROM recommended_tracks
+        WHERE diary_id = ? 
+    `;
+
+    const [rows] = await pool.query(sql, [diaryId]);
+    return rows;
+};

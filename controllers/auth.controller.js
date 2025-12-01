@@ -1,34 +1,29 @@
 import * as authSvc from '../services/auth.service.js';
 
-// export async function kakaoLoginStart(req, res, next) {
-//   try {
-//     // CSRF용 state는 JSON 방식이면 굳이 필요 없음 (원하면 추가 가능)
-//     const url = authSvc.buildKakaoAuthUrl('dummy_state');
-//     return res.redirect(url);
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-
-export async function kakaoLoginStart(_req, res, next) {
+// ▼▼▼ [이 함수가 없거나 export가 빠져 있어서 에러가 난 겁니다!] ▼▼▼
+export async function kakaoLoginStart(req, res, next) {
   try {
-    const url = authSvc.buildKakaoAuthUrl('dummy');
-    console.log('[Kakao authorize URL]', url); // 이 주소가 .env의 redirect_uri를 포함하는지 확인
+    // .env나 서비스에서 URL 생성 로직을 가져옴
+    const url = authSvc.buildKakaoAuthUrl('dummy'); 
+    console.log('[Kakao authorize URL]', url);
     return res.redirect(url);
-  } catch (e) { next(e); }
+  } catch (e) { 
+    next(e); 
+  }
 }
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-
+// 아까 수정한 콜백 함수 (req.body 버전)
 export async function kakaoCallback(req, res, next) {
   try {
-    // const { code } = req.query;
-    const { code } = req.body;
+    const { code } = req.body; 
+
     if (!code) return res.status(400).json({ error: 'missing_code' });
 
     const { jwt, isNewUser, user } = await authSvc.handleKakaoCallback(code);
 
-    // JSON 응답 (프론트가 token 저장)
-    return res.json({ token: jwt, isNewUser, user });
+    return res.json({ jwt: jwt, isNewUser, user });   
+    
   } catch (err) {
     next(err);
   }

@@ -8,10 +8,17 @@
 </head>
 <body>
     <header>
-        <h1>Soundiary</h1>
-        <nav>
-            <span>OOO님, 환영합니다!</span>
-            <button id="logout-btn" class="btn-secondary">로그아웃</button>
+        <h1>Soundiary 🎵</h1>
+        <nav style="display: flex; align-items: center; gap: 10px;">
+            <span><span id="nickname-display" style="font-weight: bold;">OOO</span>님, 환영합니다!</span>
+            
+            <button onclick="location.href='mypage.html'" class="btn-header btn-purple">
+                📂 내 프로필 & 일기장
+            </button>
+
+            <button id="logout-btn" class="btn-header btn-grey">
+                로그아웃
+            </button>
         </nav>
     </header>
 
@@ -23,7 +30,7 @@
         </form>
         
         <div id="result-area">
-            </div>
+        </div>
     </main>
     
     <script src="js/index.js"></script>
