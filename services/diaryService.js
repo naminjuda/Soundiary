@@ -17,9 +17,9 @@ export const createDiarywithTracks = async (userId, content) => {
         diaryId,
         track.id,
         track.name,
-        track.artists.map(artist => artist.name).join(', '),
+        track.artists.join(', '),
         track.external_urls?.spotify || null,
-        track.album.images[0]?.url || null
+        track.album?.images?.[0]?.url || null
     ]);
 
     if (dbData.length > 0) {
@@ -32,7 +32,14 @@ export const createDiarywithTracks = async (userId, content) => {
         }
     }
 
-    return recommendationResult;
+    return {
+        savedDiary: {
+            diary_id: diaryId,
+            content,
+            emotion_keyword: recommendationResult.Keywords
+        },
+        track: recommendationResult.tracks[0] || null
+    }
 };
 
 // 일기 목록 조회
