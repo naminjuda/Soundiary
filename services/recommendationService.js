@@ -9,27 +9,45 @@ const mapKeywordsToQuery = (keywords) => {
 
 // 플레이리스트검색 함수
 const searchPlaylists = async (query, token) => {
-    const response = await axios.get('https://api.spotify.com/v1/search', {
+    try {
+        const response = await axios.get('https://api.spotify.com/v1/search', {
         headers: { Authorization: `Bearer ${token}` },
         params: {
             q: query,
             type: 'playlist',
             limit: 5
-        }
-    });
-    return response.data.playlists.items;
+            }
+        });
+        return response.data.playlists.items;
+    } catch (error) {
+        console.error('Error searching playlists:', error);
+        return [];
+    }
 };
 
 // 트랙 가져오기 함수
 const getTracksFromPlaylist = async (playlist_id, token) => {
-    const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: {
-            limit: 10,
-            fields: 'items(track(id, name, artists(name), external_urls, album(images)))' // 필요한 필드만 선택
-        }
-    });
-    return response.data.items.map(item => item.track).filter(track => track != null);
+    try {
+        const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`, {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+                limit: 10,
+                fields: 'items(track(id, name, artists(name), external_urls, album(images)))' // 필요한 필드만 선택
+            }
+        });
+        const items = response.data.items || [];
+        return items
+            .filter(item => item?.track?.id)
+            .map(item => ({
+                id: item.track.id,
+                name: item.track.name,
+                artists: item.track.artists?.map(artist => artist.name) || ['Unknown Artist'],
+                album_cover: item.track.album?.images?.[0]?.url || '',
+            }));
+    } catch (error) {
+        console.error('Error getting tracks from playlist:', error);
+        return [];
+    }
 };
 
 export const recommendTrackFromDiary = async (diaryText) => {
@@ -56,12 +74,28 @@ export const recommendTrackFromDiary = async (diaryText) => {
 
         // 5. 각 플레이리스트에서 트랙 가져오기
         console.log("플레이리스트 트랙 패치");
-        const trackPromises = playlists.map(p_list => getTracksFromPlaylist(p_list.id, token));
+        const trackPromises = playlists
+            .filter(p_list => p_list != null && p_list !== undefined)
+            .map(p_list => getTracksFromPlaylist(p_list.id, token));
         const tracksArrays = await Promise.all(trackPromises);
 
         // 6. 트랙 리스트 평탄화, 중복 제거
-        const allTracks = tracksArrays.flat();
-        const uniqueTracks = Array.from(new Map(allTracks.map(track => [track.id, track])).values());
+        const rawTracks = tracksArrays.flat();
+        const validTracks = rawTracks.filter(track =>
+            track != null && 
+            track != undefined && 
+            track.id
+        );
+
+        if (validTracks.length === 0) {
+            throw new Error('No valid tracks found in the retrieved playlists.');
+        }
+
+        const uniqueTracksMap = new Map();
+        validTracks.forEach(track => {
+            uniqueTracksMap.set(track.id, track);
+        });
+        const uniqueTracks = Array.from(uniqueTracksMap.values());
 
         // 7. 무작위 트랙 선택
         const shuffled = uniqueTracks.sort(() => 0.5 - Math.random());
@@ -71,7 +105,7 @@ export const recommendTrackFromDiary = async (diaryText) => {
         console.log(`[${keywords.join(', ')}] 추천 트랙 리스트`);
         console.log("========================================");
         finalRecommendations.forEach((track, index) => {
-            const artistNames = track.artists.map(a => a.name).join(', ');
+            const artistNames = track.artists.join(', ');
             console.log(`${index + 1}. ${track.name} - ${artistNames}`);
         });
         console.log("========================================\n");

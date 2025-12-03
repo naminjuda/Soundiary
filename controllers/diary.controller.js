@@ -17,7 +17,7 @@ export const createDiary = async (req, res) => {
 
         res.status(201).json({
             message: 'Diary created successfully',
-            data: result
+            ...result
         });
     } catch (error) {
         console.error("❌ Error in createDiary controller:", error);

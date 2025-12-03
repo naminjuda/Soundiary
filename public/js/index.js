@@ -119,8 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "index.html";
             });
         }
-        // ★ 일기 저장 및 가짜 분석 로직 (Mocking) ★
-        diaryForm.addEventListener("submit", (e) => {
+        // 일기 저장 및 분석 로직
+        diaryForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const content = document.getElementById("diary-content").value;
             if (content.trim() === "") return alert("내용을 입력해주세요.");
@@ -128,36 +128,49 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultArea = document.getElementById("result-area");
             resultArea.innerHTML = `<div style="text-align:center; padding:30px; color:#666;"><p>🤖 AI가 일기를 읽고 있어요...</p><p>🎵 어울리는 음악을 고르는 중입니다...</p></div>`;
 
-            setTimeout(() => {
-                const mockData = {
-                    id: Date.now(),
-                    date: new Date().toLocaleDateString(),
-                    content: content,
-                    emotion: "차분함 ☕",
-                    track: { title: "Rainy Day", artist: "PATEKO" }
-                };
-                // 가짜 DB(localStorage)에 저장
-                const oldDiaries = JSON.parse(localStorage.getItem('mock_diaries') || "[]");
-                oldDiaries.unshift(mockData); 
-                localStorage.setItem('mock_diaries', JSON.stringify(oldDiaries));
+            const authToken = localStorage.getItem('authToken');
+
+            try {
+                const response = await fetch(`${BACKEND_API_URL}/diary`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+
+                if (!response.ok) throw new Error('서버 응답 실패');
+
+                const { savedDiary, track } = await response.json();
 
                 resultArea.innerHTML = `
                     <div style="margin-top:20px; padding:20px; background:#f0f3ff; border-radius:10px; border:1px solid #dce6ff;">
                         <h3 style="color:#4a69bd;">✨ 분석 완료!</h3>
-                        <p><strong>오늘의 감정:</strong> ${mockData.emotion}</p>
+                        <p><strong>오늘의 감정:</strong> ${savedDiary.emotion_keyword}</p>
                         <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
                         <h4>🎧 추천 음악</h4>
-                        <p style="font-size:1.1rem;">🎵 <strong>${mockData.track.title}</strong> - ${mockData.track.artist}</p>
+                        <div class="music-box" style="display: flex; align-items: center; gap: 15px;">
+                            <img src="${track.album_cover}" alt="${track.name}" width="80" height="80" style="border-radius: 8px;">
+                            <div class="music-info">
+                                <p style="font-size:1.1rem; margin:0;">🎵 <strong>${track.name}</strong></p>
+                                <p style="font-size:0.9rem; margin:5px 0 0;">- ${track.artists.join(', ')}</p>
+                            </div>
+                        </div>
                         <p style="font-size:0.8rem; color:#888; margin-top:10px;">* 내 일기장에 저장되었습니다.</p>
                     </div>`;
                 document.getElementById("diary-content").value = "";
                 alert("일기가 저장되었습니다!");
-            }, 1500);
+            } catch (error) {
+                console.error('Error during diary submission:', error);
+                resultArea.innerHTML = `<div style="text-align:center; padding:30px; color:red;"><p>오류가 발생했습니다: ${error.message}</p></div>`;
+                alert("일기 저장에 실패했습니다.");
+            }
         });
     }
 
     // ============================================================
-    // 5. [추가됨] 마이페이지 로직 (mypage.html)
+    // 5. 마이페이지 로직 (mypage.html)
     // ============================================================
     if (window.location.pathname.includes('mypage.html')) {
         const userJson = localStorage.getItem('user_info');
@@ -171,36 +184,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 2. 일기 목록 불러오기 (Mock Data)
         const listWrapper = document.getElementById('diary-list-wrapper');
-        const diaries = JSON.parse(localStorage.getItem('mock_diaries') || "[]");
+        const authToken = localStorage.getItem('authToken');
 
-        if (diaries.length === 0) {
-            listWrapper.innerHTML = `
-                <div style="text-align:center; padding:40px; color:#aaa;">
-                    <p>아직 작성된 일기가 없어요 텅!</p>
-                    <a href="diary.html" style="color:#6c5ce7; text-decoration:none;">일기 쓰러 가기</a>
-                </div>`;
-        } else {
-            // 날짜 최신순 정렬
-            diaries.sort((a, b) => b.id - a.id);
+        async function fetchDiaries() {
+            try {
+                const response = await fetch(`${BACKEND_API_URL}/diary`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${authToken}` } 
+                });
 
-            // 리스트 렌더링 (카드 형태)
-            listWrapper.innerHTML = diaries.map(diary => `
-                <div class="diary-card">
-                    <div class="card-header">
-                        <span class="card-date">${diary.date}</span>
-                        <span class="card-emotion">${diary.emotion}</span>
-                    </div>
-                    <div class="card-content">${diary.content}</div>
+                if (!response.ok) throw new Error('서버 응답 실패');
+                const diaries = await response.json();
+
+                if (diaries.length === 0) {
+                    listWrapper.innerHTML = `
+                        <div style="text-align:center; padding:40px; color:#aaa;">
+                            <p>아직 작성된 일기가 없어요 텅!</p>
+                            <a href="diary.html" style="color:#6c5ce7; text-decoration:none;">일기 쓰러 가기</a>
+                        </div>`;
+                } else {
+                    // 날짜 최신순 정렬
+                    diaries.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                    // 리스트 렌더링 (카드 형태)
+                    listWrapper.innerHTML = diaries.map(diary => `
+                        <div class="diary-card">
+                            <div class="card-header">
+                                <span class="card-date">${new Date(diary.created_at).toLocaleDateString()}</span>
+                                <span class="card-emotion">${Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword }</span>
+                            </div>
+                            <div class="card-content">${diary.content}</div>
                     
-                    <div class="music-box">
-                        <div class="music-icon">🎧</div>
-                        <div class="music-info">
-                            <span class="music-title">${diary.track.title}</span>
-                            <span class="music-artist">${diary.track.artist}</span>
+                            ${diary.track_title ? `
+                            <div class="music-box">
+                                <div class="music-icon">🎧</div>
+                                <div class="music-info">
+                                    <span class="music-title">${diary.track_title}</span>
+                                    <span class="music-artist">${diary.track_artist.map(a => a.name).join(', ')}</span>
+                                </div>
+                            </div>
+                            ` : ''}
                         </div>
-                    </div>
-                </div>
-            `).join('');
+                    `).join('');
+                } 
+            } catch (error) {
+                console.error('Error fetching diaries:', error);
+                listWrapper.innerHTML = `<div style="text-align:center; padding:40px; color:red;"><p>일기를 불러오는데 실패했습니다: ${error.message}</p></div>`;
+            }
         }
+        fetchDiaries();
     }
 });
