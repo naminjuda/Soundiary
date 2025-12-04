@@ -64,7 +64,7 @@ header nav span { margin-right: 15px; }
     margin-bottom: 20px; resize: vertical;
 }
 
-/* ▼▼▼ [추가됨] 마이페이지 & 일기 카드 스타일 ▼▼▼ */
+/* ▼▼▼ 마이페이지 & 일기 카드 스타일 ▼▼▼ */
 .diary-card {
     background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s;
@@ -77,7 +77,7 @@ header nav span { margin-right: 15px; }
 
 .card-content { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
 
-/* 음악 추천 박스 */
+/* 음악 추천 박스 (리스트용) */
 .music-box { display: flex; align-items: center; background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
 .music-icon { font-size: 24px; margin-right: 12px; }
 .music-info { display: flex; flex-direction: column; }
@@ -85,7 +85,7 @@ header nav span { margin-right: 15px; }
 .music-artist { color: #888; font-size: 0.8rem; }
 
 /* ========================================= */
-/* [수정] 버튼 스타일 통일 (맨 아래에 붙여넣으세요) */
+/* [수정] 버튼 스타일 통일 */
 /* ========================================= */
 
 /* 모든 헤더 버튼의 공통 모양 정의 */
@@ -121,4 +121,132 @@ header nav span { margin-right: 15px; }
 .btn-grey:hover {
     background-color: #7f8c8d;
     transform: translateY(-1px);
+}
+
+/* ========================================= */
+/* [추가] 모달(상세보기) 팝업 스타일 */
+/* ========================================= */
+
+/* 모달 배경 (어두운 부분) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 헤더보다 위에 오도록 설정 */
+    backdrop-filter: blur(3px); /* 배경 살짝 흐리게 */
+}
+
+/* 모달 내용 박스 */
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 닫기 버튼 (X) */
+.close-btn {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.close-btn:hover { color: #333; }
+
+/* 모달 헤더 */
+.modal-header {
+    border-bottom: 2px solid #f4f7f6;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.modal-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+/* ▼ [수정됨] 모달 내부 텍스트 (스크롤 기능 적용) ▼ */
+.diary-text {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #444;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+    font-size: 1rem;
+
+    /* 스크롤 설정 */
+    max-height: 300px;      /* 높이가 300px을 넘으면 */
+    overflow-y: auto;       /* 세로 스크롤바 생성 */
+}
+
+/* 스크롤바 디자인 (크롬, 사파리 등) */
+.diary-text::-webkit-scrollbar {
+    width: 8px;
+}
+.diary-text::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 4px;
+}
+.diary-text::-webkit-scrollbar-thumb {
+    background: #ccc; 
+    border-radius: 4px;
+}
+.diary-text::-webkit-scrollbar-thumb:hover {
+    background: #aaa; 
+}
+
+/* 감정 배지 (모달용) */
+.emotion-badge {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* 모달 음악 박스 */
+.modal-music-box {
+    display: flex;
+    align-items: center;
+    background-color: #f0f3ff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #dce6ff;
+}
+
+/* ▼ [추가됨] 앨범 커버 이미지 스타일 ▼ */
+.modal-album-cover {
+    width: 80px;              /* 너비 고정 */
+    height: 80px;             /* 높이 고정 */
+    border-radius: 12px;      /* 모서리 둥글게 */
+    margin-right: 20px;       /* 텍스트와 간격 벌리기 */
+    object-fit: cover;        /* 이미지가 찌그러지지 않고 꽉 차게 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 부드러운 그림자 효과 */
+    background-color: #ddd;   /* 이미지가 로딩되기 전 보여줄 회색 배경 */
+}
+
+.track-title { font-weight: bold; font-size: 1.05rem; margin: 0; color: #333; }
+.track-artist { color: #666; font-size: 0.9rem; margin: 4px 0 0; }
+
+/* 팝업 등장 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
