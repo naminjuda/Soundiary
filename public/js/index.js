@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // [설정] 본인의 키와 주소로 확인해주세요
     const KAKAO_REST_API_KEY = '98f74e2cb38069c300b9cc21691b3bd5'; 
     const KAKAO_REDIRECT_URI = '/callback.html'; 
+    // 로컬 환경에 맞춰서 localhost:3000 사용 (필요시 변경)
     const BACKEND_API_URL = 'http://localhost:3000'; 
 
     // ============================================================
@@ -170,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================================
-    // 5. 마이페이지 로직 (mypage.html)
+    // 5. 마이페이지 로직 (mypage.html) - [수정됨: 모달 기능 통합]
     // ============================================================
     if (window.location.pathname.includes('mypage.html')) {
         const userJson = localStorage.getItem('user_info');
@@ -182,10 +183,27 @@ document.addEventListener("DOMContentLoaded", () => {
             if(user.nickname) document.getElementById('my-nickname').textContent = user.nickname;
         }
 
-        // 2. 일기 목록 불러오기 (Mock Data)
         const listWrapper = document.getElementById('diary-list-wrapper');
         const authToken = localStorage.getItem('authToken');
 
+        // [추가] 모달 관련 요소 선택
+        const modal = document.getElementById('diary-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // [추가] 모달 닫기 이벤트
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+        }
+        // 모달 바깥 배경 클릭 시 닫기
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 2. 일기 목록 불러오기
         async function fetchDiaries() {
             try {
                 const response = await fetch(`${BACKEND_API_URL}/diary`, {
@@ -207,13 +225,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     diaries.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
                     // 리스트 렌더링 (카드 형태)
+                    // [변경] 각 카드에 data-id 속성 추가
                     listWrapper.innerHTML = diaries.map(diary => `
-                        <div class="diary-card">
+                        <div class="diary-card" data-id="${diary.id}" style="cursor: pointer;">
                             <div class="card-header">
                                 <span class="card-date">${new Date(diary.created_at).toLocaleDateString()}</span>
                                 <span class="card-emotion">${Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword }</span>
                             </div>
-                            <div class="card-content">${diary.content}</div>
+                            <div class="card-content" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                ${diary.content}
+                            </div>
                     
                             ${diary.track_title ? `
                             <div class="music-box">
@@ -226,12 +247,89 @@ document.addEventListener("DOMContentLoaded", () => {
                             ` : ''}
                         </div>
                     `).join('');
+
+                    // [추가] 렌더링 후 모든 카드에 클릭 이벤트 리스너 부착
+                    document.querySelectorAll('.diary-card').forEach(card => {
+                        card.addEventListener('click', async () => {
+                            const diaryId = card.getAttribute('data-id');
+                            await openDiaryDetail(diaryId);
+                        });
+                    });
                 } 
             } catch (error) {
                 console.error('Error fetching diaries:', error);
                 listWrapper.innerHTML = `<div style="text-align:center; padding:40px; color:red;"><p>일기를 불러오는데 실패했습니다: ${error.message}</p></div>`;
             }
         }
+        // [수정] 상세 정보 가져오기 및 모달 띄우기 함수
+        async function openDiaryDetail(id) {
+            try {
+                const response = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if(!response.ok) throw new Error('상세 정보를 불러올 수 없습니다.');
+                
+                const diary = await response.json();
+                
+                // 1. 날짜, 감정, 내용 채우기
+                document.getElementById('modal-date').textContent = new Date(diary.created_at).toLocaleDateString() + "의 기록";
+                const emotionText = Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword;
+                document.getElementById('modal-emotion').textContent = emotionText;
+                document.getElementById('modal-text').textContent = diary.content;
+
+                // 2. 앨범 커버 및 노래 정보 처리
+                const musicBox = document.getElementById('modal-music-box');
+                const albumCoverImg = document.getElementById('modal-album-cover');
+                
+                let firstTrack = null;
+                if (Array.isArray(diary.tracks) && diary.tracks.length > 0) {
+                    firstTrack = diary.tracks[0];
+                }
+
+                if (firstTrack) {
+                    musicBox.style.display = 'flex';
+                    
+                    // ▼▼▼ [핵심 수정] 주소를 'placehold.co'로 변경했습니다! ▼▼▼
+                    // 데이터에 이미지가 있으면 그걸 쓰고, 없으면(null) 회색 박스를 보여줍니다.
+                    const coverSrc = firstTrack.album_cover ? firstTrack.album_cover : 'https://placehold.co/80x80?text=No+Cover';
+                    
+                    albumCoverImg.src = coverSrc;
+                    
+                    // 혹시라도 실제 이미지 로딩이 실패하면 회색 박스로 대체 (안전장치)
+                    albumCoverImg.onerror = function() {
+                        this.src = 'https://placehold.co/80x80?text=No+Image';
+                    };
+
+                    // 제목 및 가수
+                    document.getElementById('modal-track-title').textContent = firstTrack.track_title || "제목 없음";
+                    
+                    let artistName = firstTrack.track_artist;
+                    if (Array.isArray(artistName)) {
+                        artistName = artistName.map(a => a.name || a).join(', ');
+                    }
+                    document.getElementById('modal-track-artist').textContent = artistName || "알 수 없는 가수";
+
+                } else if (diary.track_title) {
+                    // 예전 데이터 대응
+                    musicBox.style.display = 'flex';
+                    albumCoverImg.src = 'https://placehold.co/80x80?text=Old+Data';
+                    document.getElementById('modal-track-title').textContent = diary.track_title;
+                    document.getElementById('modal-track-artist').textContent = diary.track_artist || "알 수 없는 가수";
+                } else {
+                    musicBox.style.display = 'none';
+                }
+
+                // 모달 보여주기
+                modal.style.display = 'flex';
+
+            } catch (error) {
+                console.error(error);
+                alert("일기 상세 정보를 가져오는 데 실패했습니다.");
+            }
+        }
+
         fetchDiaries();
     }
 });
