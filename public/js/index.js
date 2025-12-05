@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // [설정] 본인의 키와 주소로 확인해주세요
     const KAKAO_REST_API_KEY = '98f74e2cb38069c300b9cc21691b3bd5'; 
     const KAKAO_REDIRECT_URI = '/callback.html'; 
     // 로컬 환경에 맞춰서 localhost:3000 사용 (필요시 변경)
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
                         <h4>🎧 추천 음악</h4>
                         <div class="music-box" style="display: flex; align-items: center; gap: 15px;">
-                            <img src="${track.album_cover}" alt="${track.name}" width="80" height="80" style="border-radius: 8px;">
+                            <img src="${track.album_cover || 'https://placehold.co/80x80?text=No+Cover'}" alt="${track.name}" width="80" height="80" style="border-radius: 8px;">
                             <div class="music-info">
                                 <p style="font-size:1.1rem; margin:0;">🎵 <strong>${track.name}</strong></p>
                                 <p style="font-size:0.9rem; margin:5px 0 0;">- ${track.artists.join(', ')}</p>
@@ -186,11 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const listWrapper = document.getElementById('diary-list-wrapper');
         const authToken = localStorage.getItem('authToken');
 
-        // [추가] 모달 관련 요소 선택
+        // 모달 관련 요소 선택
         const modal = document.getElementById('diary-modal');
         const closeModalBtn = document.getElementById('close-modal');
 
-        // [추가] 모달 닫기 이벤트
+        // 모달 닫기 이벤트
         if (closeModalBtn) {
             closeModalBtn.addEventListener('click', () => {
                 modal.style.display = 'none';
@@ -225,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     diaries.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
                     // 리스트 렌더링 (카드 형태)
-                    // [변경] 각 카드에 data-id 속성 추가
+                    // 각 카드에 data-id 속성 추가
                     listWrapper.innerHTML = diaries.map(diary => `
                         <div class="diary-card" data-id="${diary.id}" style="cursor: pointer;">
                             <div class="card-header">
@@ -248,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `).join('');
 
-                    // [추가] 렌더링 후 모든 카드에 클릭 이벤트 리스너 부착
+                    // 렌더링 후 모든 카드에 클릭 이벤트 리스너 부착
                     document.querySelectorAll('.diary-card').forEach(card => {
                         card.addEventListener('click', async () => {
                             const diaryId = card.getAttribute('data-id');
@@ -291,13 +290,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (firstTrack) {
                     musicBox.style.display = 'flex';
                     
-                    // ▼▼▼ [핵심 수정] 주소를 'placehold.co'로 변경했습니다! ▼▼▼
-                    // 데이터에 이미지가 있으면 그걸 쓰고, 없으면(null) 회색 박스를 보여줍니다.
+                    // 데이터에 이미지가 있으면 그걸 쓰고, 없으면(null) 회색 박스를 보여줌
                     const coverSrc = firstTrack.album_cover ? firstTrack.album_cover : 'https://placehold.co/80x80?text=No+Cover';
                     
                     albumCoverImg.src = coverSrc;
                     
-                    // 혹시라도 실제 이미지 로딩이 실패하면 회색 박스로 대체 (안전장치)
+                    // 실제 이미지 로딩이 실패하면 회색 박스로 대체 (안전장치)
                     albumCoverImg.onerror = function() {
                         this.src = 'https://placehold.co/80x80?text=No+Image';
                     };

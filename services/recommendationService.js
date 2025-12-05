@@ -43,6 +43,7 @@ const getTracksFromPlaylist = async (playlist_id, token) => {
                 name: item.track.name,
                 artists: item.track.artists?.map(artist => artist.name) || ['Unknown Artist'],
                 album_cover: item.track.album?.images?.[0]?.url || '',
+                external_urls: item.track.external_urls
             }));
     } catch (error) {
         console.error('Error getting tracks from playlist:', error);
@@ -53,19 +54,15 @@ const getTracksFromPlaylist = async (playlist_id, token) => {
 export const recommendTrackFromDiary = async (diaryText) => {
     try {
         // 1. 감정 키워드 추출
-        console.log("키워드 추출"); // 디버그 로그
         const keywords = await getEmotionKeywords(diaryText);
-        console.log("키워드: ", keywords); // 디버그 로그
 
         // 2. 키워드를 검색 쿼리로 변환
         const searchQuery = mapKeywordsToQuery(keywords);
-        console.log("검색 쿼리: ", searchQuery); // 디버그 로그
 
         // 3. Spotify 토큰 가져오기
         const token = await getSpotifyToken();
 
         // 4. 플레이리스트 검색
-        console.log("플레이리스트 검색"); // 디버그 로그
         const playlists = await searchPlaylists(searchQuery, token);
 
         if (!playlists || playlists.length === 0) {
@@ -73,7 +70,6 @@ export const recommendTrackFromDiary = async (diaryText) => {
         }
 
         // 5. 각 플레이리스트에서 트랙 가져오기
-        console.log("플레이리스트 트랙 패치");
         const trackPromises = playlists
             .filter(p_list => p_list != null && p_list !== undefined)
             .map(p_list => getTracksFromPlaylist(p_list.id, token));
@@ -101,14 +97,9 @@ export const recommendTrackFromDiary = async (diaryText) => {
         const shuffled = uniqueTracks.sort(() => 0.5 - Math.random());
         const finalRecommendations = shuffled.slice(0, 10); // 최대 10곡 추천
 
-        console.log("\n========================================");
-        console.log(`[${keywords.join(', ')}] 추천 트랙 리스트`);
-        console.log("========================================");
         finalRecommendations.forEach((track, index) => {
             const artistNames = track.artists.join(', ');
-            console.log(`${index + 1}. ${track.name} - ${artistNames}`);
         });
-        console.log("========================================\n");
 
         return {
             Keywords: keywords,

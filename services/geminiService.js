@@ -27,7 +27,6 @@ export async function getEmotionKeywords(diaryText) {
         });
 
         const text = response.text;
-        console.log('Gemini API response:', text);
         if (!text || typeof text !== 'string') {
             console.error('Invalid text response from Gemini API:', text);
             throw new Error('Invalid response from Gemini API.');

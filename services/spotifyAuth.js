@@ -34,7 +34,6 @@ async function requestSpotifyToken() {
     const token = response.data.access_token;
     cachedToken = token;
     tokenExpiry = Date.now() + response.data.expires_in*1000; // 만료 시간 설정
-    console.log('Spotify Access Token:', token);
     return token;
   } catch (error) {
     console.error('Failed to retrieve Spotify access token:', error.response?.data || error.message);
@@ -47,6 +46,5 @@ export async function getSpotifyToken() {
   if (!cachedToken || Date.now() >= tokenExpiry) {
     return await requestSpotifyToken(); 
   }
-  console.log('Using cached Spotify Access Token:', cachedToken);
   return cachedToken;
 }
