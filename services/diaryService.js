@@ -9,9 +9,7 @@ export const createDiarywithTracks = async (userId, content) => {
 
     const emotionKeyword = recommendationResult.Keywords.join(', ');
 
-    console.log("Saving diary to DB...");
     const diaryId = await createDiary(userId, content, emotionKeyword);
-    console.log(`✅Diary saved with ID: ${diaryId}`);
 
     const dbData = recommendationResult.tracks.map(track => [
         diaryId,
@@ -19,13 +17,12 @@ export const createDiarywithTracks = async (userId, content) => {
         track.name,
         track.artists.join(', '),
         track.external_urls?.spotify || null,
-        track.album?.images?.[0]?.url || null
+        track.album_cover || null
     ]);
 
     if (dbData.length > 0) {
         try {
             await createRecommendedTrack(dbData);
-            console.log(`✅Tracks saved to DB for diary ID: ${diaryId}`);
         } catch (error) {
             console.error("❌ Error saving tracks to DB:", error);
             throw error;
@@ -55,10 +52,11 @@ export const getMyDiary = async (diaryId, userId) => {
     if (diary.user_id !== userId) throw new Error('UNAUTHORIZED_ACCESS');
     
     const tracks = await trackRepo.findTracksByDiaryId(diaryId);
-    return {
-        ...diary, // 전개구문: 객체의 내용물을 펼침
+    const result = {
+        ...diary,
         tracks: tracks
     };
+    return result;
 };
 
 // 일기 삭제

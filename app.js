@@ -3,19 +3,19 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
-// [추가] path와 url 모듈 임포트
+// path와 url 모듈 임포트
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import authRouter from './routes/auth.routes.js';
-import spotifyRouter from './routes/spotify.routes.js'; // spotify router 추가
-import geminiRouter from './routes/gemini.routes.js'; // gemini router 추가
-import recommendationRouter from './routes/recommendation.routes.js'; // recommendation router 추가
-import diaryRouter from './routes/diary.routes.js'; // diary router 추가
+import spotifyRouter from './routes/spotify.routes.js'; // spotify router
+import geminiRouter from './routes/gemini.routes.js'; // gemini router
+import recommendationRouter from './routes/recommendation.routes.js'; // recommendation router
+import diaryRouter from './routes/diary.routes.js'; // diary router
 import { notFound, errorHandler } from './middlewares/error.js';
 import * as userRepo from './repositories/user.repo.js';
 
-// [추가] __filename, __dirname 설정 (ESM 기준)
+// __filename, __dirname 설정 (ESM 기준)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -30,12 +30,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 라우트 설정
 app.use('/auth', authRouter);
-app.use('/spotify', spotifyRouter); // spotify 라우트 사용
-app.use('/gemini', geminiRouter); // gemini 라우트 사용
-app.use('/recommendation', recommendationRouter); // recommendation 라우트 사용
-app.use('/diary', diaryRouter); // diary 라우트 사용
+app.use('/spotify', spotifyRouter); // spotify 라우트
+app.use('/gemini', geminiRouter); // gemini 라우트
+app.use('/recommendation', recommendationRouter); // recommendation 라우트
+app.use('/diary', diaryRouter); // diary 라우트
 
-// ★ 프로필 업데이트 API (이게 없어서 404가 떴던 것!)
+// 프로필 업데이트 API (이게 없어서 404가 떴던 것)
 app.post('/auth/update-profile', async (req, res) => {
     const { kakao_id, nickname } = req.body;
     try {
