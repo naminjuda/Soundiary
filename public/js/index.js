@@ -232,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 listWrapper.innerHTML = `<div style="text-align:center; padding:40px; color:red;"><p>일기를 불러오는데 실패했습니다: ${error.message}</p></div>`;
             }
         }
+
         async function openDiaryDetail(id) {
             try {
                 const response = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
@@ -247,6 +248,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 const emotionText = Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword;
                 document.getElementById('modal-emotion').textContent = emotionText;
                 document.getElementById('modal-text').textContent = diary.content;
+
+                const deleteBtn = document.getElementById('delete-diary-btn');
+                
+                deleteBtn.onclick = async () => {
+                    const confirmDelete = confirm("정말 이 일기를 삭제하시겠습니까?\n삭제된 내용은 복구할 수 없습니다.");
+                    
+                    if (confirmDelete) {
+                        try {
+                            const deleteRes = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${authToken}` }
+                            });
+
+                            if (deleteRes.ok) {
+                                alert("일기가 삭제되었습니다.");
+                                modal.style.display = 'none';
+                                fetchDiaries();
+                            } else {
+                                const errData = await deleteRes.json();
+                                alert(`삭제 실패: ${errData.message}`);
+                            }
+                        } catch (error) {
+                            console.error("삭제 중 오류:", error);
+                            alert("서버 오류로 삭제하지 못했습니다.");
+                        }
+                    }
+                };
 
                 const musicBox = document.getElementById('modal-music-box');
                 const albumCoverImg = document.getElementById('modal-album-cover');
