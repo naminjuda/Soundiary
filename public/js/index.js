@@ -2,12 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const KAKAO_REST_API_KEY = '98f74e2cb38069c300b9cc21691b3bd5'; 
     const KAKAO_REDIRECT_URI = '/callback.html'; 
-    // 로컬 환경에 맞춰서 localhost:3000 사용 (필요시 변경)
     const BACKEND_API_URL = 'http://localhost:3000'; 
 
-    // ============================================================
-    // 1. 로그인 페이지 로직 (index.html)
-    // ============================================================
     const kakaoLoginButton = document.getElementById("kakao-login-btn");
     if (kakaoLoginButton) {
         kakaoLoginButton.addEventListener("click", () => {
@@ -16,9 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ============================================================
-    // 2. 카카오 콜백 처리 로직 (callback.html)
-    // ============================================================
     if (window.location.pathname === KAKAO_REDIRECT_URI) {
         document.body.innerHTML = `<div class="form-container"><h1>로그인 처리 중...</h1><p>잠시만 기다려주세요.</p></div>`;
         const params = new URL(window.location.href).searchParams;
@@ -57,9 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================================================
-    // 3. 프로필 설정 페이지 로직 (profile-setup.html)
-    // ============================================================
     const saveProfileBtn = document.getElementById("save-profile-btn");
     if (saveProfileBtn) {
         const userJson = localStorage.getItem('user_info');
@@ -96,12 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ============================================================
-    // 4. 다이어리 페이지 로직 (diary.html)
-    // ============================================================
     const diaryForm = document.getElementById("diary-form");
     if (diaryForm) { 
-        // 닉네임 표시 & 권한 확인
         const userJson = localStorage.getItem('user_info');
         if (userJson) {
             const user = JSON.parse(userJson);
@@ -111,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("로그인이 필요합니다.");
             window.location.href = "index.html";
         }
-        // 로그아웃
         const logoutBtn = document.getElementById("logout-btn");
         if(logoutBtn) {
             logoutBtn.addEventListener("click", () => {
@@ -119,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "index.html";
             });
         }
-        // 일기 저장 및 분석 로직
         diaryForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const content = document.getElementById("diary-content").value;
@@ -169,13 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ============================================================
-    // 5. 마이페이지 로직 (mypage.html) - [수정됨: 모달 기능 통합]
-    // ============================================================
     if (window.location.pathname.includes('mypage.html')) {
         const userJson = localStorage.getItem('user_info');
         
-        // 1. 프로필 정보 띄우기
         if (userJson) {
             const user = JSON.parse(userJson);
             if(user.profile_image) document.getElementById('my-profile-img').src = user.profile_image;
@@ -185,24 +165,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const listWrapper = document.getElementById('diary-list-wrapper');
         const authToken = localStorage.getItem('authToken');
 
-        // 모달 관련 요소 선택
         const modal = document.getElementById('diary-modal');
         const closeModalBtn = document.getElementById('close-modal');
 
-        // 모달 닫기 이벤트
         if (closeModalBtn) {
             closeModalBtn.addEventListener('click', () => {
                 modal.style.display = 'none';
             });
         }
-        // 모달 바깥 배경 클릭 시 닫기
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
             }
         });
 
-        // 2. 일기 목록 불러오기
         async function fetchDiaries() {
             try {
                 const response = await fetch(`${BACKEND_API_URL}/diary`, {
@@ -220,11 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <a href="diary.html" style="color:#6c5ce7; text-decoration:none;">일기 쓰러 가기</a>
                         </div>`;
                 } else {
-                    // 날짜 최신순 정렬
                     diaries.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-                    // 리스트 렌더링 (카드 형태)
-                    // 각 카드에 data-id 속성 추가
                     listWrapper.innerHTML = diaries.map(diary => `
                         <div class="diary-card" data-id="${diary.id}" style="cursor: pointer;">
                             <div class="card-header">
@@ -247,7 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `).join('');
 
-                    // 렌더링 후 모든 카드에 클릭 이벤트 리스너 부착
                     document.querySelectorAll('.diary-card').forEach(card => {
                         card.addEventListener('click', async () => {
                             const diaryId = card.getAttribute('data-id');
@@ -260,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 listWrapper.innerHTML = `<div style="text-align:center; padding:40px; color:red;"><p>일기를 불러오는데 실패했습니다: ${error.message}</p></div>`;
             }
         }
-        // [수정] 상세 정보 가져오기 및 모달 띄우기 함수
         async function openDiaryDetail(id) {
             try {
                 const response = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
@@ -272,13 +243,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const diary = await response.json();
                 
-                // 1. 날짜, 감정, 내용 채우기
                 document.getElementById('modal-date').textContent = new Date(diary.created_at).toLocaleDateString() + "의 기록";
                 const emotionText = Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword;
                 document.getElementById('modal-emotion').textContent = emotionText;
                 document.getElementById('modal-text').textContent = diary.content;
 
-                // 2. 앨범 커버 및 노래 정보 처리
                 const musicBox = document.getElementById('modal-music-box');
                 const albumCoverImg = document.getElementById('modal-album-cover');
                 
@@ -290,17 +259,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (firstTrack) {
                     musicBox.style.display = 'flex';
                     
-                    // 데이터에 이미지가 있으면 그걸 쓰고, 없으면(null) 회색 박스를 보여줌
                     const coverSrc = firstTrack.album_cover ? firstTrack.album_cover : 'https://placehold.co/80x80?text=No+Cover';
                     
                     albumCoverImg.src = coverSrc;
                     
-                    // 실제 이미지 로딩이 실패하면 회색 박스로 대체 (안전장치)
                     albumCoverImg.onerror = function() {
                         this.src = 'https://placehold.co/80x80?text=No+Image';
                     };
 
-                    // 제목 및 가수
                     document.getElementById('modal-track-title').textContent = firstTrack.track_title || "제목 없음";
                     
                     let artistName = firstTrack.track_artist;
@@ -310,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById('modal-track-artist').textContent = artistName || "알 수 없는 가수";
 
                 } else if (diary.track_title) {
-                    // 예전 데이터 대응
                     musicBox.style.display = 'flex';
                     albumCoverImg.src = 'https://placehold.co/80x80?text=Old+Data';
                     document.getElementById('modal-track-title').textContent = diary.track_title;
@@ -319,7 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     musicBox.style.display = 'none';
                 }
 
-                // 모달 보여주기
                 modal.style.display = 'flex';
 
             } catch (error) {
