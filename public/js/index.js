@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     
+    // [설정] 본인의 키와 주소로 확인해주세요
     const KAKAO_REST_API_KEY = '98f74e2cb38069c300b9cc21691b3bd5'; 
     const KAKAO_REDIRECT_URI = '/callback.html'; 
     // 로컬 환경에 맞춰서 localhost:3000 사용 (필요시 변경)
@@ -170,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================================
-    // 5. 마이페이지 로직 (mypage.html) - [수정됨: 모달 기능 통합]
+    // 5. 마이페이지 로직 (mypage.html) - [수정됨: 모달 기능 + 삭제 기능 통합]
     // ============================================================
     if (window.location.pathname.includes('mypage.html')) {
         const userJson = localStorage.getItem('user_info');
@@ -224,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     diaries.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
                     // 리스트 렌더링 (카드 형태)
-                    // 각 카드에 data-id 속성 추가
                     listWrapper.innerHTML = diaries.map(diary => `
                         <div class="diary-card" data-id="${diary.id}" style="cursor: pointer;">
                             <div class="card-header">
@@ -260,7 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 listWrapper.innerHTML = `<div style="text-align:center; padding:40px; color:red;"><p>일기를 불러오는데 실패했습니다: ${error.message}</p></div>`;
             }
         }
-        // [수정] 상세 정보 가져오기 및 모달 띄우기 함수
+        
+        // [수정] 상세 정보 가져오기 및 모달 띄우기 함수 (+ 삭제 로직)
         async function openDiaryDetail(id) {
             try {
                 const response = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
@@ -277,6 +278,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 const emotionText = Array.isArray(diary.emotion_keyword) ? diary.emotion_keyword.join(', ') : diary.emotion_keyword;
                 document.getElementById('modal-emotion').textContent = emotionText;
                 document.getElementById('modal-text').textContent = diary.content;
+
+                // =========================================================
+                // 🗑️ [추가됨] 삭제 버튼 이벤트 연결
+                // =========================================================
+                const deleteBtn = document.getElementById('delete-diary-btn');
+                
+                deleteBtn.onclick = async () => {
+                    const confirmDelete = confirm("정말 이 일기를 삭제하시겠습니까?\n삭제된 내용은 복구할 수 없습니다.");
+                    
+                    if (confirmDelete) {
+                        try {
+                            const deleteRes = await fetch(`${BACKEND_API_URL}/diary/${id}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${authToken}` }
+                            });
+
+                            if (deleteRes.ok) {
+                                alert("일기가 삭제되었습니다.");
+                                modal.style.display = 'none'; // 모달 닫기
+                                fetchDiaries(); // 목록 새로고침 (삭제된 거 반영)
+                            } else {
+                                const errData = await deleteRes.json();
+                                alert(`삭제 실패: ${errData.message}`);
+                            }
+                        } catch (error) {
+                            console.error("삭제 중 오류:", error);
+                            alert("서버 오류로 삭제하지 못했습니다.");
+                        }
+                    }
+                };
 
                 // 2. 앨범 커버 및 노래 정보 처리
                 const musicBox = document.getElementById('modal-music-box');

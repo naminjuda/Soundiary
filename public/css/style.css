@@ -250,3 +250,22 @@ header nav span { margin-right: 15px; }
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ▼▼▼ [추가됨] 일기 삭제 버튼 스타일 ▼▼▼ */
+.btn-delete {
+    background: none;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-right: 30px;
+}
+
+.btn-delete:hover {
+    background-color: #ff6b6b;
+    color: white;
+}
