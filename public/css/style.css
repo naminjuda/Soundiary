@@ -1,11 +1,9 @@
-/* 기본 스타일 초기화 및 설정 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #f4f7f6; color: #333; line-height: 1.6;
 }
 
-/* 폼 컨테이너 */
 .form-container {
     max-width: 400px; margin: 50px auto; padding: 30px;
     background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -13,12 +11,10 @@ body {
 .form-container h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
 .form-container h2 { text-align: center; color: #34495e; margin-bottom: 30px; }
 
-/* 폼 입력 그룹 */
 .input-group { margin-bottom: 20px; }
 .input-group label { display: block; margin-bottom: 5px; font-weight: 600; }
 .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
 
-/* 버튼 스타일 */
 .btn {
     width: 100%; padding: 12px; background-color: #3498db; color: white;
     border: none; border-radius: 4px; font-size: 1rem; font-weight: 700; cursor: pointer;
@@ -26,7 +22,6 @@ body {
 }
 .btn:hover { background-color: #2980b9; }
 
-/* 카카오 로그인 버튼 */
 .btn.kakao {
     background-color: #FEE500; color: #191919; margin-top: 10px;
     display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -34,7 +29,6 @@ body {
 .btn.kakao:hover { background-color: #fdd835; }
 .btn.kakao img { width: 18px; height: 18px; }
 
-/* 소셜 로그인 구분선 */
 .social-divider { display: flex; align-items: center; text-align: center; color: #888; margin: 15px 0; }
 .social-divider::before, .social-divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
 .social-divider:not(:empty)::before { margin-right: .25em; }
@@ -43,11 +37,9 @@ body {
 .btn-secondary { background-color: #95a5a6; }
 .btn-secondary:hover { background-color: #7f8c8d; }
 
-/* 하단 링크 */
 .auth-link { text-align: center; margin-top: 20px; }
 .auth-link a { color: #3498db; text-decoration: none; }
 
-/* --- 다이어리 페이지 스타일 --- */
 header {
     background-color: #ffffff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -64,7 +56,6 @@ header nav span { margin-right: 15px; }
     margin-bottom: 20px; resize: vertical;
 }
 
-/* ▼▼▼ 마이페이지 & 일기 카드 스타일 ▼▼▼ */
 .diary-card {
     background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s;
@@ -77,44 +68,36 @@ header nav span { margin-right: 15px; }
 
 .card-content { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
 
-/* 음악 추천 박스 (리스트용) */
 .music-box { display: flex; align-items: center; background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
 .music-icon { font-size: 24px; margin-right: 12px; }
 .music-info { display: flex; flex-direction: column; }
 .music-title { font-weight: bold; color: #333; font-size: 0.9rem; }
 .music-artist { color: #888; font-size: 0.8rem; }
 
-/* ========================================= */
-/* [수정] 버튼 스타일 통일 */
-/* ========================================= */
-
-/* 모든 헤더 버튼의 공통 모양 정의 */
 .btn-header {
-    padding: 8px 16px;       /* 높이와 너비 통일 */
-    font-size: 0.9rem;       /* 글자 크기 통일 */
-    border-radius: 6px;      /* 둥근 모서리 통일 */
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 6px;
     border: none;
     font-weight: bold;
     cursor: pointer;
     color: white;
     transition: all 0.2s ease;
-    display: inline-flex;    /* 내부 텍스트/아이콘 중앙 정렬 */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    height: 38px;            /* 높이 강제 고정 (중요!) */
+    height: 38px;
 }
 
-/* 색상 1: 보라색 (강조 버튼 - 프로필, 저장 등) */
 .btn-purple {
     background-color: #6c5ce7;
 }
 .btn-purple:hover {
     background-color: #5b4cc4;
-    transform: translateY(-1px); /* 살짝 떠오르는 효과 */
+    transform: translateY(-1px);
 }
 
-/* 색상 2: 회색 (보조 버튼 - 로그아웃, 뒤로가기) */
 .btn-grey {
     background-color: #95a5a6;
 }
@@ -123,24 +106,18 @@ header nav span { margin-right: 15px; }
     transform: translateY(-1px);
 }
 
-/* ========================================= */
-/* [추가] 모달(상세보기) 팝업 스타일 */
-/* ========================================= */
-
-/* 모달 배경 (어두운 부분) */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* 헤더보다 위에 오도록 설정 */
-    backdrop-filter: blur(3px); /* 배경 살짝 흐리게 */
+    z-index: 1000;
+    backdrop-filter: blur(3px);
 }
 
-/* 모달 내용 박스 */
 .modal-content {
     background-color: white;
     padding: 30px;
@@ -152,7 +129,6 @@ header nav span { margin-right: 15px; }
     animation: fadeIn 0.3s ease-out;
 }
 
-/* 닫기 버튼 (X) */
 .close-btn {
     position: absolute;
     top: 15px; right: 20px;
@@ -164,7 +140,6 @@ header nav span { margin-right: 15px; }
 }
 .close-btn:hover { color: #333; }
 
-/* 모달 헤더 */
 .modal-header {
     border-bottom: 2px solid #f4f7f6;
     padding-bottom: 15px;
@@ -179,7 +154,6 @@ header nav span { margin-right: 15px; }
     font-size: 1.2rem;
 }
 
-/* ▼ [수정됨] 모달 내부 텍스트 (스크롤 기능 적용) ▼ */
 .diary-text {
     background-color: #f9f9f9;
     padding: 20px;
@@ -187,15 +161,12 @@ header nav span { margin-right: 15px; }
     line-height: 1.6;
     margin-bottom: 20px;
     color: #444;
-    white-space: pre-wrap; /* 줄바꿈 유지 */
+    white-space: pre-wrap;
     font-size: 1rem;
-
-    /* 스크롤 설정 */
-    max-height: 300px;      /* 높이가 300px을 넘으면 */
-    overflow-y: auto;       /* 세로 스크롤바 생성 */
+    max-height: 300px;
+    overflow-y: auto;
 }
 
-/* 스크롤바 디자인 (크롬, 사파리 등) */
 .diary-text::-webkit-scrollbar {
     width: 8px;
 }
@@ -211,7 +182,6 @@ header nav span { margin-right: 15px; }
     background: #aaa; 
 }
 
-/* 감정 배지 (모달용) */
 .emotion-badge {
     background-color: #e3f2fd;
     color: #1565c0;
@@ -221,7 +191,6 @@ header nav span { margin-right: 15px; }
     font-weight: bold;
 }
 
-/* 모달 음악 박스 */
 .modal-music-box {
     display: flex;
     align-items: center;
@@ -231,21 +200,19 @@ header nav span { margin-right: 15px; }
     border: 1px solid #dce6ff;
 }
 
-/* ▼ [추가됨] 앨범 커버 이미지 스타일 ▼ */
 .modal-album-cover {
-    width: 80px;              /* 너비 고정 */
-    height: 80px;             /* 높이 고정 */
-    border-radius: 12px;      /* 모서리 둥글게 */
-    margin-right: 20px;       /* 텍스트와 간격 벌리기 */
-    object-fit: cover;        /* 이미지가 찌그러지지 않고 꽉 차게 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 부드러운 그림자 효과 */
-    background-color: #ddd;   /* 이미지가 로딩되기 전 보여줄 회색 배경 */
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    margin-right: 20px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #ddd;
 }
 
 .track-title { font-weight: bold; font-size: 1.05rem; margin: 0; color: #333; }
 .track-artist { color: #666; font-size: 0.9rem; margin: 4px 0 0; }
 
-/* 팝업 등장 애니메이션 */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
